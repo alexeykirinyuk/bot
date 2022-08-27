@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
@@ -38,16 +37,23 @@ func main() {
 
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-		if strings.EqualFold(update.Message.Text, "нет") {
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Ну пожалуйста...")
-			bot.Send(msg)
-		} else if strings.EqualFold(update.Message.Text, "да") || strings.EqualFold(update.Message.Text, "ладно") {
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Ура")
-			bot.Send(msg)
-		} else {
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Почитаешь мне книжку вечером?")
-			bot.Send(msg)
+		switch update.Message.Command() {
+		case "help":
+			helpCommand(bot, update.Message)
+		default:
+			defaultBehaviour(bot, update.Message)
 		}
-
 	}
+}
+
+func helpCommand(bot *tgbotapi.BotAPI, inputMessage *tgbotapi.Message) {
+	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "/help - help")
+	bot.Send(msg)
+}
+
+func defaultBehaviour(bot *tgbotapi.BotAPI, inputMessage *tgbotapi.Message) {
+	log.Printf("[%s] %s", inputMessage.From.UserName, inputMessage.Text)
+
+	msg := tgbotapi.NewMessage(inputMessage.Chat.ID, "Вы написали: "+inputMessage.Text)
+	bot.Send(msg)
 }

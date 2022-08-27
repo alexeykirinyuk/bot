@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/alexeykirinyuk/bot/internal/service/product"
@@ -22,6 +23,12 @@ func NewCommander(bot *tgbotapi.BotAPI, productService *product.Service) *Comman
 }
 
 func (c *Commander) HandleUpdate(update *tgbotapi.Update) {
+	defer func() {
+		if panicValue := recover(); panicValue != nil {
+			fmt.Println("recovered from panic:", panicValue)
+		}
+	}()
+
 	if update.Message == nil {
 		return
 	}
@@ -35,6 +42,8 @@ func (c *Commander) HandleUpdate(update *tgbotapi.Update) {
 		c.List(update.Message)
 	case "get":
 		c.Get(update.Message)
+	case "panic":
+		c.Panic(update.Message)
 	default:
 		c.Default(update.Message)
 	}

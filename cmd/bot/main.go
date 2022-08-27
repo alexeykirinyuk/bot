@@ -36,7 +36,6 @@ func main() {
 	})
 
 	for update := range updates {
-
 		commander.HandleUpdate(&update)
 	}
 }

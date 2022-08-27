@@ -8,6 +8,7 @@ func (c *Commander) Help(inputMessage *tgbotapi.Message) {
 	msg := tgbotapi.NewMessage(inputMessage.Chat.ID,
 		"/help - help\n"+
 			"/list - list products\n"+
-			"/get - TBD")
+			"/get - TBD\n"+
+			"/panic - PANIC")
 	c.bot.Send(msg)
 }

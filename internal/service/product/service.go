@@ -8,5 +8,5 @@ func NewService() *Service {
 }
 
 func (c *Service) List() []Product {
-	return products
+	return allProducts
 }

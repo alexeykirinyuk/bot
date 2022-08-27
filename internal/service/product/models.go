@@ -4,7 +4,7 @@ type Product struct {
 	Title string
 }
 
-var products []Product = []Product{
+var allProducts []Product = []Product{
 	{Title: "one"},
 	{Title: "two"},
 	{Title: "three"},

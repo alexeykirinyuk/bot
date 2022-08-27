@@ -15,6 +15,10 @@ type Commander struct {
 	productService *product.Service
 }
 
+type CommandData struct {
+	Offset int `json:"offset"`
+}
+
 func NewCommander(bot *tgbotapi.BotAPI, productService *product.Service) *Commander {
 	return &Commander{
 		bot:            bot,
@@ -29,6 +33,11 @@ func (c *Commander) HandleUpdate(update *tgbotapi.Update) {
 		}
 	}()
 
+	if update.CallbackQuery != nil {
+		c.NextPage(update.CallbackQuery)
+		return
+	}
+
 	if update.Message == nil {
 		return
 	}
@@ -42,8 +51,12 @@ func (c *Commander) HandleUpdate(update *tgbotapi.Update) {
 		c.List(update.Message)
 	case "get":
 		c.Get(update.Message)
-	case "panic":
-		c.Panic(update.Message)
+	case "add":
+		c.Add(update.Message)
+	case "update":
+		c.Update(update.Message)
+	case "rm":
+		c.Rm(update.Message)
 	default:
 		c.Default(update.Message)
 	}

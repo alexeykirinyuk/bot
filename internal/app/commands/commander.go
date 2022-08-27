@@ -28,19 +28,14 @@ func (c *Commander) HandleUpdate(update *tgbotapi.Update) {
 
 	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-	cmd, ok := registeredCommands[update.Message.Command()]
-	if ok {
-		cmd(c, update.Message)
-	} else {
+	switch update.Message.Command() {
+	case "help":
+		c.Help(update.Message)
+	case "list":
+		c.List(update.Message)
+	case "get":
+		c.Get(update.Message)
+	default:
 		c.Default(update.Message)
 	}
-
-	// switch update.Message.Command() {
-	// case "help":
-	// 	c.Help(update.Message)
-	// case "list":
-	// 	c.List(update.Message)
-	// default:
-	// 	c.Default(update.Message)
-	// }
 }
